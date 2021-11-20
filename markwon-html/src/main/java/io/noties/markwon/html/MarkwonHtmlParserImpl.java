@@ -61,7 +61,7 @@ public class MarkwonHtmlParserImpl extends MarkwonHtmlParser {
                 "cite", "code",
                 "dfn",
                 "em",
-                "i", "img", "input",
+                "i", "u", "img", "input",
                 "kbd",
                 "label",
                 "map",
@@ -69,7 +69,8 @@ public class MarkwonHtmlParserImpl extends MarkwonHtmlParser {
                 "q",
                 "samp", "script", "select", "small", "span", "strong", "sub", "sup",
                 "textarea", "time", "tt",
-                "var"
+                "var",
+                "glossary"
         )));
         VOID_TAGS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
                 "area",
@@ -101,7 +102,7 @@ public class MarkwonHtmlParserImpl extends MarkwonHtmlParser {
                 "section",
                 "table", "tfoot",
                 "ul",
-                "video"
+                "video","html","body"
         )));
     }
 
@@ -310,7 +311,7 @@ public class MarkwonHtmlParserImpl extends MarkwonHtmlParser {
 
         final HtmlTagImpl.BlockImpl block = HtmlTagImpl.BlockImpl.create(name, start, extractAttributes(startTag), currentBlock);
 
-        final boolean isVoid = isVoidTag(name) || startTag.selfClosing;
+        final boolean isVoid = isVoidTag(name) || startTag.selfClosing || isUnknownTag(name);
         if (isVoid) {
             final String replacement = emptyTagReplacement.replace(block);
             if (replacement != null
@@ -433,6 +434,10 @@ public class MarkwonHtmlParserImpl extends MarkwonHtmlParser {
 
     protected static boolean isBlockTag(@NonNull String name) {
         return BLOCK_TAGS.contains(name);
+    }
+
+    private static boolean isUnknownTag(@NonNull String name) {
+        return !BLOCK_TAGS.contains(name) && !VOID_TAGS.contains(name) && !INLINE_TAGS.contains(name);
     }
 
     protected static <T extends Appendable & CharSequence> void ensureNewLine(@NonNull T output) {

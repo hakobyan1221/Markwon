@@ -59,7 +59,7 @@ android {
     }
 
     // do not sign in CI
-    if (!project.hasProperty('CI')) {
+   /* if (!project.hasProperty('CI')) {
         signingConfigs {
             config {
 
@@ -99,7 +99,7 @@ android {
                 signingConfig signingConfigs.config
             }
         }
-    }
+    }*/
 }
 
 kapt {
