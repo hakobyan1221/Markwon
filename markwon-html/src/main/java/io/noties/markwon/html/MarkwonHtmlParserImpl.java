@@ -55,7 +55,7 @@ public class MarkwonHtmlParserImpl extends MarkwonHtmlParser {
     private static final String TAG_LIST_ITEM = "li";
 
     static {
-        INLINE_TAGS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+        INLINE_TAGS =  Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
                 "a", "abbr", "acronym",
                 "b", "bdo", "big", "br", "button",
                 "cite", "code",
@@ -311,7 +311,7 @@ public class MarkwonHtmlParserImpl extends MarkwonHtmlParser {
 
         final HtmlTagImpl.BlockImpl block = HtmlTagImpl.BlockImpl.create(name, start, extractAttributes(startTag), currentBlock);
 
-        final boolean isVoid = isVoidTag(name) || startTag.selfClosing || isUnknownTag(name);
+        final boolean isVoid = isVoidTag(name) || startTag.selfClosing;
         if (isVoid) {
             final String replacement = emptyTagReplacement.replace(block);
             if (replacement != null
@@ -429,7 +429,7 @@ public class MarkwonHtmlParserImpl extends MarkwonHtmlParser {
     }
 
     protected static boolean isVoidTag(@NonNull String name) {
-        return VOID_TAGS.contains(name);
+        return VOID_TAGS.contains(name) || (!INLINE_TAGS.contains(name) && !BLOCK_TAGS.contains(name));
     }
 
     protected static boolean isBlockTag(@NonNull String name) {

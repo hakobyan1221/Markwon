@@ -1,7 +1,12 @@
-apply plugin: 'com.android.application'
+plugins{
+    id 'com.android.library'
+    id 'maven-publish'
+}
+//apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
+
 
 def gitSha = { ->
     def output = new ByteArrayOutputStream()
@@ -18,7 +23,7 @@ android {
     buildToolsVersion config['build-tools']
 
     defaultConfig {
-        applicationId 'io.noties.markwon.app'
+       // applicationId 'io.noties.markwon.app'
         minSdkVersion 23
         targetSdkVersion config['target-sdk']
         versionCode 1
@@ -162,5 +167,17 @@ dependencies {
         testImplementation it['junit']
         testImplementation it['robolectric']
         testImplementation it['mockito']
+    }
+}
+afterEvaluate {
+    publishing{
+        publications{
+            release(MavenPublication){
+                from components.release
+                groupId = 'io.markwon'
+                artifactId = 'markwon_fixes'
+                version = '5.0.0'
+            }
+        }
     }
 }
